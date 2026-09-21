@@ -3,10 +3,10 @@ from PIL import Image, ImageDraw, ImageFont
 import os
 
 st.title("Generador Rápido de Vouchers Yape")
-st.write("Modifica la fecha, hora y operación al instante:")
+st.write("Modifica la fecha, la hora y el número de operación:")
 
-fecha = st.text_input("Fecha", value="22 set. 2026")
-hora = st.text_input("Hora", value="01:15 p. m.")
+fecha = st.text_input("Fecha", value="17 set. 2026")
+hora = st.text_input("Hora", value="06:15 p. m.")
 operacion = st.text_input("Nro. de Operación", value="5648702")
 
 if st.button("Generar Voucher"):
@@ -19,24 +19,24 @@ if st.button("Generar Voucher"):
             st.stop()
 
     img = Image.open(img_name).convert("RGBA")
+    w, h = img.size
     draw = ImageDraw.Draw(img)
 
     try:
-        font_texto = ImageFont.truetype("arial.ttf", 10)
+        font_texto = ImageFont.truetype("arial.ttf", int(h * 0.022))
     except:
         font_texto = ImageFont.load_default()
 
-    # Coordenadas exactas en base a la resolución de tu imagen base:
-    # 1. Limpiar la zona exacta donde está la fecha y hora original en la tarjeta
-    draw.rectangle([70, 200, 190, 218], fill="white")
+    # Limpiar con blanco la zona exacta de la fecha y hora original dentro de la tarjeta
+    draw.rectangle([int(w * 0.25), int(h * 0.65), int(w * 0.85), int(h * 0.70)], fill="white")
     
-    # 2. Limpiar la zona exacta donde está el número de operación original
-    draw.rectangle([160, 285, 230, 298], fill="white")
+    # Limpiar la zona exacta del número de operación en la parte inferior
+    draw.rectangle([int(w * 0.60), int(h * 0.80), int(w * 0.95), int(h * 0.85)], fill="white")
 
-    # Escribir los nuevos datos exactamente en el lugar limpio
+    # Escribir los nuevos datos en su posición exacta
     fecha_hora_str = f"{fecha}  |  {hora}"
-    draw.text((72, 203), fecha_hora_str, fill="#555555", font=font_texto)
-    draw.text((165, 287), operacion, fill="#2b2b2b", font=font_texto)
+    draw.text((int(w * 0.26), int(h * 0.655)), fecha_hora_str, fill="#555555", font=font_texto)
+    draw.text((int(w * 0.65), int(h * 0.805)), operacion, fill="#2b2b2b", font=font_texto)
 
     output_path = "voucher_salida.png"
     img.convert("RGB").save(output_path)
