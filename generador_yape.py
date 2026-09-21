@@ -3,7 +3,7 @@ from PIL import Image, ImageDraw, ImageFont
 import os
 
 st.title("Generador Rápido de Vouchers Yape")
-st.write("Modifica solo la fecha, hora y operación al instante:")
+st.write("Modifica la fecha, hora y operación al instante:")
 
 fecha = st.text_input("Fecha", value="22 set. 2026")
 hora = st.text_input("Hora", value="01:15 p. m.")
@@ -26,21 +26,17 @@ if st.button("Generar Voucher"):
     except:
         font_texto = ImageFont.load_default()
 
-    # --- TAPA EL TEXTO VIEJO DE LA FECHA Y HORA ORIGINAL ---
-    # Dibuja un rectángulo blanco exactamente encima de la fecha y hora original de la tarjeta
-    draw.rectangle([170, 725, 380, 745], fill="white")
+    # Coordenadas exactas en base a la resolución de tu imagen base:
+    # 1. Limpiar la zona exacta donde está la fecha y hora original en la tarjeta
+    draw.rectangle([70, 200, 190, 218], fill="white")
+    
+    # 2. Limpiar la zona exacta donde está el número de operación original
+    draw.rectangle([160, 285, 230, 298], fill="white")
 
-    # --- TAPA EL NÚMERO DE OPERACIÓN VIEJO ---
-    draw.rectangle([350, 830, 420, 850], fill="white")
-
-    # --- ESCRIBE LOS NUEVOS DATOS EN SU LUGAR EXACTO ---
+    # Escribir los nuevos datos exactamente en el lugar limpio
     fecha_hora_str = f"{fecha}  |  {hora}"
-    
-    # Escribir la nueva Fecha y Hora abajo junto al icono
-    draw.text((195, 728), fecha_hora_str, fill="#555555", font=font_texto)
-    
-    # Escribir el nuevo Nro de Operación
-    draw.text((365, 832), operacion, fill="#2b2b2b", font=font_texto)
+    draw.text((72, 203), fecha_hora_str, fill="#555555", font=font_texto)
+    draw.text((165, 287), operacion, fill="#2b2b2b", font=font_texto)
 
     output_path = "voucher_salida.png"
     img.convert("RGB").save(output_path)
